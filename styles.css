@@ -116,6 +116,9 @@ h2 {
    box-shadow: 0 5px 10px 2px var(--box-shadow-color);
    z-index: 1;
    background-color: var(--header-bgcolor);
+
+   position: sticky;
+   top: 0;
 }
 
 .header h1 {
@@ -181,6 +184,11 @@ h2 {
    align-items: center;
    gap: 0.5rem;
    margin-right: -2rem;
+}
+
+.library__book div:nth-child(2) p:last-of-type {
+   display: flex;
+   gap: 0.5rem;
 }
 
 .library__book div:nth-child(2) input:hover,
