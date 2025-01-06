@@ -15,107 +15,37 @@
    </header>
 
    <main class="main">
-      <output class="library">
-         <div class="library__book">
-            <div>
-               <img src="./assets/imgs/remove.svg" alt="remove icon">
-            </div>
-            <div>
-               <h2 class="book-title">Mankind's Search For God</h2>
-               <p class="book-author">Anonymous</p>
-               <p class="book-pages">Total Pages: 384</p>
-               <p class="book-read-status">
-                  <input type="checkbox" id="read" name="read">
-                  <label for="read">Read</label>
-               </p>
-            </div>
-         </div>
-         <div class="library__book">
-            <div>
-               <img src="./assets/imgs/remove.svg" alt="remove icon">
-            </div>
-            <div>
-               <h2 class="book-title">Atomic Habits</h2>
-               <p class="book-author">James Clear</p>
-               <p class="book-pages">Total Pages: 320</p>
-               <p class="book-read-status">
-                  <input type="checkbox" id="read" name="read" checked>
-                  <label for="read">Read</label>
-               </p>
-            </div>
-         </div>
-         <div class="library__book">
-            <div>
-               <img src="./assets/imgs/remove.svg" alt="remove icon">
-            </div>
-            <div>
-               <h2 class="book-title">The Intelligent Investor</h2>
-               <p class="book-author">Benjamin Graham</p>
-               <p class="book-pages">Total Pages: 623</p>
-               <p class="book-read-status">
-                  <input type="checkbox" id="read" name="read">
-                  <label for="read">Read</label>
-               </p>
-            </div>
-         </div>
-         <div class="library__book">
-            <div>
-               <img src="./assets/imgs/remove.svg" alt="remove icon">
-            </div>
-            <div>
-               <h2 class="book-title">Getting Things Done</h2>
-               <p class="book-author">David Allen</p>
-               <p class="book-pages">Total Pages: 352</p>
-               <p class="book-read-status">
-                  <input type="checkbox" id="read" name="read" checked>
-                  <label for="read">Read</label>
-               </p>
-            </div>
-         </div>
-         <div class="library__book">
-            <div>
-               <img src="./assets/imgs/remove.svg" alt="remove icon">
-            </div>
-            <div>
-               <h2 class="book-title">Thinking, Fast and Slow</h2>
-               <p class="book-author">Daniel Kahneman</p>
-               <p class="book-pages">Total Pages: 499</p>
-               <p class="book-read-status">
-                  <input type="checkbox" id="read" name="read">
-                  <label for="read">Read</label>
-               </p>
-            </div>
-         </div>
-      </output>
-
+      <div class="library output">
+         
+      </div>
       <p class="add-book">
          <img src="./assets/imgs/plus-circle.svg" alt="add more books icon">
       </p>
    </main>
 
    <dialog class="dialog">
-      <form>
+      <form method="dialog">
          <div class="form-inputs">
             <div>
                <label for="title">Title</label>
-               <input type="text" id="title" name="title" maxlength="40">
+               <input type="text" id="title" name="title" maxlength="40" required>
             </div>
             <div>
                <label for="author">Author</label>
-               <input type="text" id="author" name="author" maxlength="20">
+               <input type="text" id="author" name="author" maxlength="20" required>
             </div>
             <div>
                <label for="pages">Number of Pages</label>
-               <input type="number" id="pages" name="pages">
+               <input type="number" id="pages" name="pages" required>
             </div>
             <div>
-               <input type="checkbox" id="read" name="read">
-               <label for="read">Read?</label>
+               <input type="checkbox" id="read--form" name="read--form">
+               <label for="read--form">Read?</label>
             </div>
          </div>
          <div class="form-actions">
-            <button class="add" value="default">Add</button>
-            <button class="cancel" value="cancel" formmethod="dialog">Cancel</button>
+            <button type="submit" value="add">Add</button>
+            <button type="button" value="cancel">Cancel</button>
          </div>
       </form>
    </dialog>
