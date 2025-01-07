@@ -48,7 +48,9 @@ let output = document.querySelector(".library.output");
 myLibrary.forEach((book, index) => {
       let div = document.createElement("div");
       div.setAttribute("class", "library__book");
+      div.setAttribute("data-index", `${index}`);
          let div1 = document.createElement("div");
+         div1.setAttribute("class", "remove-icon");
             let img = document.createElement("img");
             img.setAttribute("src", "./assets/imgs/remove.svg");
             img.setAttribute("alt", "remove icon");
@@ -90,6 +92,7 @@ myLibrary.forEach((book, index) => {
    output.appendChild(div);
 });
 
+
 function Book(title, author, pages, hasRead) {
    this.title = title;
    this.author = author;
@@ -111,7 +114,9 @@ function addBookToLibrary() {
 
       let div = document.createElement("div");
       div.setAttribute("class", "library__book");
+      div.setAttribute("data-index", `${index}`);
          let div1 = document.createElement("div");
+         div1.setAttribute("class", "remove-icon");
             let img = document.createElement("img");
             img.setAttribute("src", "./assets/imgs/remove.svg");
             img.setAttribute("alt", "remove icon");
@@ -152,25 +157,16 @@ function addBookToLibrary() {
       div.appendChild(div2);
    output.appendChild(div);
 
-      // update removeBtns NodeList anytime a book is added
-
-}
-
-   // Remove a Book from the Library
-let removeBtns = document.querySelectorAll(".library__book div:nth-child(1)");
-removeBtns.forEach((btn) => {
-   btn.addEventListener("click", (event) => {
+      // Add an Event Listener to Every Single book Added
+   let removeBtn = div.querySelector(".remove-icon");
+   removeBtn.addEventListener("click", (event) => {
          // remove book from page
       output.removeChild(event.target.closest(".library__book"));
 
          // remove book from the library array
-      let libraryBook = event.target.closest(".library__book");
-      let title = libraryBook.querySelector(".book-title").textContent;
-      for (let i = 0; i < myLibrary.length; i++) {
-         if (title ===  myLibrary[i].title) {
-            myLibrary.splice(myLibrary.indexOf(myLibrary[i]), 1);
-         }
-      }
+      let bookIndex = event.target.closest(".library__book").getAttribute("data-index");
+      myLibrary.splice(bookIndex, 1);
+
          // Assign unique IDs and for attribute values related to the checkboxes
       document.querySelectorAll(".book-read-status").forEach((container, index) => {
          let checkbox = container.querySelector("input[type='checkbox']");
@@ -179,6 +175,40 @@ removeBtns.forEach((btn) => {
          let uniqueID = `read-${index}`;
          checkbox.id = uniqueID;
          label.setAttribute("for", uniqueID);
+      });
+
+         // Reset data-index Attribute For Each Book
+      document.querySelectorAll(".library__book").forEach((container, index) => {
+         container.setAttribute("data-index", index);
+      });
+   });
+}
+
+
+   // Remove a Book From the Library
+let removeBtns = document.querySelectorAll(".remove-icon");
+removeBtns.forEach((btn) => {
+   btn.addEventListener("click", (event) => {
+         // remove book from page
+      output.removeChild(event.target.closest(".library__book"));
+
+         // remove book from the library array
+      let bookIndex = event.target.closest(".library__book").getAttribute("data-index");
+      myLibrary.splice(bookIndex, 1);
+
+         // Assign unique IDs and for attribute values related to the checkboxes
+      document.querySelectorAll(".book-read-status").forEach((container, index) => {
+         let checkbox = container.querySelector("input[type='checkbox']");
+         let label = container.querySelector("label");
+      
+         let uniqueID = `read-${index}`;
+         checkbox.id = uniqueID;
+         label.setAttribute("for", uniqueID);
+      });
+
+         // Reset data-index Attribute For Each Book
+      document.querySelectorAll(".library__book").forEach((container, index) => {
+         container.setAttribute("data-index", index);
       });
    });
 });
