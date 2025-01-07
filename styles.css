@@ -219,11 +219,53 @@ h2 {
    cursor: pointer;
 }
 
+   /* || DIALOG/MODAL */
 .dialog {
    margin: auto;
    padding: 3rem;
    border: none;
    width: 30%;
+
+   position: fixed;
+   top: -100%;
+   opacity: 0;
+   animation: none;
+   visibility: hidden;
+}
+
+.dialog[open] {
+   visibility: visible;
+   animation: drop-down 0.5s ease forwards;
+}
+
+.dialog.closing {
+   animation: slide-up 0.5s ease forwards;
+}
+
+@keyframes drop-down {
+   0% {
+     top: -200%;
+     opacity: 0;
+   }
+   70% {
+     top: 20%;
+     opacity: 0.8;
+   }
+   100% {
+      top: 0;
+      opacity: 1;
+   }
+}
+ 
+ @keyframes slide-up {
+   0% {
+     top: 0;
+     opacity: 1;
+   }
+   100% {
+      top: -200%;
+      opacity: 0;
+   }
 }
 
 .dialog::backdrop {
