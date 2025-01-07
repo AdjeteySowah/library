@@ -3,8 +3,15 @@
 let body = document.querySelector("body");
 let dialog = document.querySelector("dialog");
 let addBookIcon = document.querySelector(".add-book img");
+let input = dialog.querySelector("input");
+
 addBookIcon.addEventListener("click", () => {
+   if (dialog.classList.contains("closing")) {
+      dialog.classList.remove("closing");
+   }
    dialog.showModal();
+   dialog.style.cssText = `visibility: visible`;
+   input.focus();
    body.classList.add("blurred");
       // overemphasizing that the dialog should not be blurred
    dialog.style.filter = "none";
@@ -28,7 +35,15 @@ addBtn.addEventListener("click", (event) => {
 
 let cancelBtn = document.querySelector("button[value='cancel']");
 cancelBtn.addEventListener("click", () => {
-   dialog.close();
+   dialog.classList.add("closing");
+   dialog.addEventListener("animationend", () => {
+        if (dialog.classList.contains("closing")) {
+          dialog.close();
+          dialog.style.cssText = `visibility: hidden` ;
+          dialog.classList.remove("closing");
+         }
+      }, {once: true});
+  
    body.classList.remove("blurred");
    form.reset();
 });
