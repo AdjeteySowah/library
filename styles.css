@@ -230,11 +230,9 @@ h2 {
    top: -100%;
    opacity: 0;
    animation: none;
-   visibility: hidden;
 }
 
 .dialog[open] {
-   visibility: visible;
    animation: drop-down 0.5s ease forwards;
 }
 
