@@ -1,229 +1,167 @@
+let libraryModule = {
+   myLibrary: [
+      {title: "Mankind's Search For God", author: "Anonymous", pages: "384", hasRead: false},
+      {title: "Atomic Habits", author: "James Clear", pages: "320", hasRead: true},
+      {title: "The Intelligent Investor", author: "Benjamin Graham", pages: "623", hasRead: false},
+      {title: "Getting Things Done", author: "David Allen", pages: "352", hasRead: true},
+      {title: "Thinking, Fast and Slow", author: "Daniel Kahneman", pages: "499", hasRead: false},
+   ],
 
-   // Show Dialog and Blur Body
-let body = document.querySelector("body");
-let dialog = document.querySelector("dialog");
-let addBookIcon = document.querySelector(".add-book img");
-let input = dialog.querySelector("input");
+   init: function() {
+      this.cacheDom();
+      this.bindEvents();
+      this.render();
+   },
 
-addBookIcon.addEventListener("click", () => {
-   if (dialog.classList.contains("closing")) {
-      dialog.classList.remove("closing");
-   }
-   dialog.showModal();
-   dialog.style.cssText = `visibility: visible`;
-   input.focus();
-   body.classList.add("blurred");
-      // overemphasizing that the dialog should not be blurred
-   dialog.style.filter = "none";
-});
+   cacheDom: function() {
+      this.body = document.querySelector("body");
+      this.output = this.body.querySelector(".library.output");
+      this.addBookIcon = this.body.querySelector(".add-book img");
+      this.dialog = this.body.querySelector("dialog");
+      this.form = this.body.querySelector("form");
+      this.input = this.body.querySelector("input");
+      this.title = this.body.querySelector("input[id='title']");
+      this.author = this.body.querySelector("input[id='author']");
+      this.pages = this.body.querySelector("input[id='pages']");
+      this.hasRead = this.body.querySelector("input[id='read--form']");
+      this.addBtn = this.body.querySelector("button[value='add']");
+      this.cancelBtn = this.body.querySelector("button[value='cancel']");
+   },
 
-   // Close Dialog, Reset Dialog and Unblur Body
-let form = document.querySelector("form");
-let addBtn = document.querySelector("button[value='add']");
-addBtn.addEventListener("click", (event) => {
-   event.preventDefault();
+   bindEvents: function() {
+      this.output.addEventListener("click", this.removeBook.bind(this));
+      this.addBookIcon.addEventListener("click", this.showModal.bind(this));
+      this.addBtn.addEventListener("click", this.closeModal.bind(this));      // this calls the addBook method
+      this.cancelBtn.addEventListener("click", this.slideUpModalWithAnimation.bind(this));
+   },
 
-   if (!form.checkValidity()) {
-      form.reportValidity();
-   } else {
-      addBookToLibrary();
-      dialog.close();
-      body.classList.remove("blurred");
-      form.reset();
-   }
-});
+   render: function() {
+      this.output.innerHTML = "";
 
-let cancelBtn = document.querySelector("button[value='cancel']");
-cancelBtn.addEventListener("click", () => {
-   dialog.classList.add("closing");
-   dialog.addEventListener("animationend", () => {
-        if (dialog.classList.contains("closing")) {
-          dialog.close();
-          dialog.style.cssText = `visibility: hidden` ;
-          dialog.classList.remove("closing");
-         }
-      }, {once: true});
-  
-   body.classList.remove("blurred");
-   form.reset();
-});
+      this.myLibrary.forEach((book, index) => {
+            let div = document.createElement("div");
+            div.setAttribute("class", "library__book");
+            div.setAttribute("data-index", `${index}`);
+               let div1 = document.createElement("div");
+               div1.setAttribute("class", "remove-icon");
+                  let img = document.createElement("img");
+                  img.setAttribute("src", "./assets/imgs/remove.svg");
+                  img.setAttribute("alt", "remove icon");
+                  img.setAttribute("class", "remove-icon");
+               div1.appendChild(img);
 
+               let div2 = document.createElement("div");
+                  let heading = document.createElement("h2");
+                  heading.setAttribute("class", "book-title");
+                  heading.textContent = book.title;
 
-   // Create Book Objects and Store in Array
-let myLibrary = [
-                  {title: "Mankind's Search For God", author: "Anonymous", pages: "384", hasRead: false},
-                  {title: "Atomic Habits", author: "James Clear", pages: "320", hasRead: true},
-                  {title: "The Intelligent Investor", author: "Benjamin Graham", pages: "623", hasRead: false},
-                  {title: "Getting Things Done", author: "David Allen", pages: "352", hasRead: true},
-                  {title: "Thinking, Fast and Slow", author: "Daniel Kahneman", pages: "499", hasRead: false},
-                ];
+                  let paragraph1 = document.createElement("p");
+                  paragraph1.setAttribute("class", "book-author");
+                  paragraph1.textContent = book.author;
+
+                  let paragraph2 = document.createElement("p");
+                  paragraph2.setAttribute("class", "book-pages");
+                  paragraph2.textContent = `Total Pages: ${book.pages}`;
+
+                  let paragraph3 = document.createElement("p");
+                  paragraph3.setAttribute("class", "book-read-status");
+                     let checkbox = document.createElement("input");
+                     checkbox.setAttribute("type", "checkbox");
+                     checkbox.setAttribute("id", `read-${index}`);
+                     checkbox.setAttribute("name", "read");
+                     checkbox.setAttribute("class", "book-card-input");
+                     if (book.hasRead === true) {
+                        checkbox.setAttribute("checked", "");
+                     }
+                     let label = document.createElement("label");
+                     label.setAttribute("for", `read-${index}`);
+                     label.textContent = "Read";
+                  paragraph3.appendChild(checkbox);
+                  paragraph3.appendChild(label);
+               div2.appendChild(heading);
+               div2.appendChild(paragraph1);
+               div2.appendChild(paragraph2);
+               div2.appendChild(paragraph3);
+            div.appendChild(div1);
+            div.appendChild(div2);
+
+         this.output.appendChild(div);
+      });
+   },
+
+   Book: function(title, author, pages, hasRead) {
+      this.title = title;
+      this.author = author;
+      this.pages = pages;
+      this.hasRead = hasRead;
+   },
+
+   addBook: function() {
+      let newBook = new this.Book(this.title.value, this.author.value, this.pages.value, this.hasRead.checked);
+      this.myLibrary.push(newBook);
+      this.render();
+   },
+
+      // Show Dialog and Blur Body
+   showModal: function() {
+      if (this.dialog.classList.contains("closing")) {
+         this.dialog.classList.remove("closing");
+      }
+      this.dialog.showModal();
+
+      this.input.focus();
+      
+      this.body.classList.add("blurred");
+         // overemphasizing that the dialog should not be blurred
+      this.dialog.style.filter = "none";
+   },
+
+      // Close Dialog, Reset Dialog and Unblur Body
+   closeModal: function(event) {
+      event.preventDefault();
+
+      if (!this.form.checkValidity()) {
+         this.form.reportValidity();
+      } else {
+         this.addBook();
+         this.dialog.close();
+         this.body.classList.remove("blurred");
+         this.form.reset();
+      }
+   },
+
+   slideUpModalWithAnimation: function() {
+      this.dialog.classList.add("closing");
+      this.dialog.addEventListener("animationend", () => {
+         if (this.dialog.classList.contains("closing")) {
+            this.dialog.close();
+            }
+         }, {once: true});
    
-      // Loop Through the Already Existing Library(Array) and Display Each book as a Card
-let output = document.querySelector(".library.output");
-myLibrary.forEach((book, index) => {
-      let div = document.createElement("div");
-      div.setAttribute("class", "library__book");
-      div.setAttribute("data-index", `${index}`);
-         let div1 = document.createElement("div");
-         div1.setAttribute("class", "remove-icon");
-            let img = document.createElement("img");
-            img.setAttribute("src", "./assets/imgs/remove.svg");
-            img.setAttribute("alt", "remove icon");
-         div1.appendChild(img);
+      this.body.classList.remove("blurred");
+      this.form.reset();
+   },
 
-         let div2 = document.createElement("div");
-            let heading = document.createElement("h2");
-            heading.setAttribute("class", "book-title");
-            heading.textContent = book.title;
-
-            let paragraph1 = document.createElement("p");
-            paragraph1.setAttribute("class", "book-author");
-            paragraph1.textContent = book.author;
-
-            let paragraph2 = document.createElement("p");
-            paragraph2.setAttribute("class", "book-pages");
-            paragraph2.textContent = `Total Pages: ${book.pages}`;
-
-            let paragraph3 = document.createElement("p");
-            paragraph3.setAttribute("class", "book-read-status");
-               let checkbox = document.createElement("input");
-               checkbox.setAttribute("type", "checkbox");
-               checkbox.setAttribute("id", `read-${index}`);
-               checkbox.setAttribute("name", "read");
-               if (book.hasRead === true) {
-                  checkbox.setAttribute("checked", "");
-               }
-               let label = document.createElement("label");
-               label.setAttribute("for", `read-${index}`);
-               label.textContent = "Read";
-            paragraph3.appendChild(checkbox);
-            paragraph3.appendChild(label);
-         div2.appendChild(heading);
-         div2.appendChild(paragraph1);
-         div2.appendChild(paragraph2);
-         div2.appendChild(paragraph3);
-      div.appendChild(div1);
-      div.appendChild(div2);
-   output.appendChild(div);
-});
-
-
-function Book(title, author, pages, hasRead) {
-   this.title = title;
-   this.author = author;
-   this.pages = pages;
-   this.hasRead = hasRead;
-}
-
-let title = document.querySelector("input[id='title']");
-let author = document.querySelector("input[id='author']");
-let pages = document.querySelector("input[id='pages']");
-let hasRead = document.querySelector("input[id='read--form']");
-
-function addBookToLibrary() {
-   let book = new Book(title.value, author.value, pages.value, hasRead.checked);
-   myLibrary.push(book);
-
-      // Display a Newly Added Book as a Card
-   let index = myLibrary.length - 1;
-
-      let div = document.createElement("div");
-      div.setAttribute("class", "library__book");
-      div.setAttribute("data-index", `${index}`);
-         let div1 = document.createElement("div");
-         div1.setAttribute("class", "remove-icon");
-            let img = document.createElement("img");
-            img.setAttribute("src", "./assets/imgs/remove.svg");
-            img.setAttribute("alt", "remove icon");
-         div1.appendChild(img);
-
-         let div2 = document.createElement("div");
-            let heading = document.createElement("h2");
-            heading.setAttribute("class", "book-title");
-            heading.textContent = book.title;
-
-            let paragraph1 = document.createElement("p");
-            paragraph1.setAttribute("class", "book-author");
-            paragraph1.textContent = book.author;
-
-            let paragraph2 = document.createElement("p");
-            paragraph2.setAttribute("class", "book-pages");
-            paragraph2.textContent = `Total Pages: ${book.pages}`;
-
-            let paragraph3 = document.createElement("p");
-            paragraph3.setAttribute("class", "book-read-status");
-               let checkbox = document.createElement("input");
-               checkbox.setAttribute("type", "checkbox");
-               checkbox.setAttribute("id", `read-${index}`);
-               checkbox.setAttribute("name", "read");
-               if (book.hasRead === true) {
-                  checkbox.setAttribute("checked", "");
-               }
-               let label = document.createElement("label");
-               label.setAttribute("for", `read-${index}`);
-               label.textContent = "Read";
-            paragraph3.appendChild(checkbox);
-            paragraph3.appendChild(label);
-         div2.appendChild(heading);
-         div2.appendChild(paragraph1);
-         div2.appendChild(paragraph2);
-         div2.appendChild(paragraph3);
-      div.appendChild(div1);
-      div.appendChild(div2);
-   output.appendChild(div);
-
-      // Add an Event Listener to Every Single book Added
-   let removeBtn = div.querySelector(".remove-icon");
-   removeBtn.addEventListener("click", (event) => {
-         // remove book from page
-      output.removeChild(event.target.closest(".library__book"));
-
-         // remove book from the library array
+      // remove book and toggle read status in myLibrary array
+   removeBook: function(event) { 
       let bookIndex = event.target.closest(".library__book").getAttribute("data-index");
-      myLibrary.splice(bookIndex, 1);
 
-         // Assign unique IDs and for attribute values related to the checkboxes
-      document.querySelectorAll(".book-read-status").forEach((container, index) => {
-         let checkbox = container.querySelector("input[type='checkbox']");
-         let label = container.querySelector("label");
-      
-         let uniqueID = `read-${index}`;
-         checkbox.id = uniqueID;
-         label.setAttribute("for", uniqueID);
-      });
+      if (event.target.classList.contains("remove-icon")) {
+            //  remove book from page
+         this.output.removeChild(event.target.closest(".library__book"));
 
-         // Reset data-index Attribute For Each Book
-      document.querySelectorAll(".library__book").forEach((container, index) => {
-         container.setAttribute("data-index", index);
-      });
-   });
-}
+            // remove book from the library array
+         this.myLibrary.splice(bookIndex, 1);
+         this.render();
 
+      } else if (event.target.classList.contains("book-card-input")) {
+         if (this.myLibrary[bookIndex].hasRead === true) {
+            this.myLibrary[bookIndex].hasRead = false;
+         } else {
+            this.myLibrary[bookIndex].hasRead = true;
+         }
+      } 
+   },
+};
 
-   // Remove a Book From the Library
-let removeBtns = document.querySelectorAll(".remove-icon");
-removeBtns.forEach((btn) => {
-   btn.addEventListener("click", (event) => {
-         // remove book from page
-      output.removeChild(event.target.closest(".library__book"));
-
-         // remove book from the library array
-      let bookIndex = event.target.closest(".library__book").getAttribute("data-index");
-      myLibrary.splice(bookIndex, 1);
-
-         // Assign unique IDs and for attribute values related to the checkboxes
-      document.querySelectorAll(".book-read-status").forEach((container, index) => {
-         let checkbox = container.querySelector("input[type='checkbox']");
-         let label = container.querySelector("label");
-      
-         let uniqueID = `read-${index}`;
-         checkbox.id = uniqueID;
-         label.setAttribute("for", uniqueID);
-      });
-
-         // Reset data-index Attribute For Each Book
-      document.querySelectorAll(".library__book").forEach((container, index) => {
-         container.setAttribute("data-index", index);
-      });
-   });
-});
+libraryModule.init();
