@@ -89,11 +89,13 @@ let libraryModule = {
       });
    },
 
-   Book: function(title, author, pages, hasRead) {
-      this.title = title;
-      this.author = author;
-      this.pages = pages;
-      this.hasRead = hasRead;
+   Book: class {
+      constructor(title, author, pages, hasRead) {
+         this.title = title;
+         this.author = author;
+         this.pages = pages;
+         this.hasRead = hasRead;
+      }
    },
 
    addBook: function() {
